@@ -11,11 +11,12 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
 from keras.layers import Activation
+from keras.optimizers import RMSprop 
 from keras.callbacks import ModelCheckpoint
 
-LOGDIR = "/Users/dhananjaydeshpande/Desktop/Columbia Data Science/Capstone/v8/logs/"
-MODELDIR = "/Users/dhananjaydeshpande/Desktop/Columbia Data Science/Capstone/v8/model/model.h5"
-CHECKPOINTDIR = "/Users/dhananjaydeshpande/Desktop/Columbia Data Science/Capstone/v8/model/checkpoints/"
+LOGDIR = "/Users/dhananjaydeshpande/Desktop/Columbia Data Science/Capstone/v9/logs/"
+MODELDIR = "/Users/dhananjaydeshpande/Desktop/Columbia Data Science/Capstone/v9/model/model.h5"
+CHECKPOINTDIR = "/Users/dhananjaydeshpande/Desktop/Columbia Data Science/Capstone/v9/model/checkpoints/"
 
 tensorboard_callback = keras.callbacks.TensorBoard(log_dir=LOGDIR)
 
@@ -37,13 +38,16 @@ MODEL_LSTM_UNITS = 10
 MODEL_LSTM_ACTIVATION = 'relu'
 MODEL_INPUT_FEATURES = 64
 MODEL_DENSE_OUTPUTS = 1
-TRAINING_OPTIMIZER = 'adam'
+MODEL_DENSE_ACTIVATION = 'relu'
+TRAINING_OPTIMIZER = 'RMSprop'
 TRAINING_LOSS = 'mse'
 
 model = Sequential()
 model.add(LSTM(MODEL_LSTM_UNITS, activation=MODEL_LSTM_ACTIVATION, input_shape=(INPUT_TIME_STEPS, MODEL_INPUT_FEATURES)))
 model.add(Dense(MODEL_DENSE_OUTPUTS))
-model.compile(optimizer=TRAINING_OPTIMIZER, loss=TRAINING_LOSS)
+model.add(Activation(MODEL_DENSE_ACTIVATION))
+rms = RMSprop(learning_rate=0.0001, rho=0.9)
+model.compile(optimizer=rms, loss=TRAINING_LOSS)
 
 # Model checkpointing
 
